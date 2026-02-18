@@ -113,7 +113,8 @@ generateBtn.addEventListener('click', async () => {
         if (data.status === 'success' && data.result_image_url) {
             resultImage.src = data.result_image_url;
             resultUrl.value = data.result_image_url;
-            downloadBtn.href = `/api/download?url=${encodeURIComponent(data.result_image_url)}`;
+            // Use task_id for download as requested
+            downloadBtn.href = `/api/download?task_id=${data.task_id}`;
 
             // Wait for image to load before removing overlay
             resultImage.onload = () => {
