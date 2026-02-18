@@ -13,7 +13,7 @@ class NanoBananaAPI:
     def generate_image(self, prompt, **options):
         data = {
             'prompt': prompt,
-            'type': options.get('type', 'TEXTTOIAMGE'),
+            'type': options.get('type', 'NANOBANANAPRO'),
             'numImages': options.get('numImages', 1),
             'callBackUrl': options.get('callBackUrl'),
             'watermark': options.get('watermark')
