@@ -13,8 +13,8 @@ class NanoBananaAPI:
     def generate_image(self, prompt, **options):
         data = {
             'prompt': prompt,
-            'type': options.get('type', 'TEXTTOIAMGE'),
             'numImages': options.get('numImages', 1),
+            'resolution': options.get('resolution', '1K'),
             'callBackUrl': options.get('callBackUrl'),
             'watermark': options.get('watermark')
         }
@@ -22,7 +22,8 @@ class NanoBananaAPI:
         if options.get('imageUrls'):
             data['imageUrls'] = options['imageUrls']
         
-        response = requests.post(f'{self.base_url}/generate', 
+        # User requested specific URL: https://api.nanobananaapi.ai/api/v1/nanobanana/generate-pro
+        response = requests.post(f'{self.base_url}/generate-pro', 
                                headers=self.headers, json=data)
         result = response.json()
         
