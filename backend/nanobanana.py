@@ -11,31 +11,19 @@ class NanoBananaAPI:
         }
     
     def generate_image(self, prompt, **options):
-        req_type = options.get('type', 'TEXTTOIAMGE')
-        
-        if req_type == 'NANOBANANAPRO':
-            endpoint = f'{self.base_url}/generate-pro'
-            data = {
-                'prompt': prompt,
-                'numImages': options.get('numImages', 1),
-                'resolution': options.get('resolution', '1K'), # Default to 1K as verified
-                'callBackUrl': options.get('callBackUrl'),
-                'watermark': options.get('watermark')
-            }
-        else:
-            endpoint = f'{self.base_url}/generate'
-            data = {
-                'prompt': prompt,
-                'type': req_type,
-                'numImages': options.get('numImages', 1),
-                'callBackUrl': options.get('callBackUrl'),
-                'watermark': options.get('watermark')
-            }
+        data = {
+            'prompt': prompt,
+            'type': options.get('type', 'TEXTTOIAMGE'),
+            'numImages': options.get('numImages', 1),
+            'callBackUrl': options.get('callBackUrl'),
+            'watermark': options.get('watermark')
+        }
         
         if options.get('imageUrls'):
             data['imageUrls'] = options['imageUrls']
         
-        response = requests.post(endpoint, headers=self.headers, json=data)
+        response = requests.post(f'{self.base_url}/generate', 
+                               headers=self.headers, json=data)
         result = response.json()
         
         if not response.ok or result.get('code') != 200:
