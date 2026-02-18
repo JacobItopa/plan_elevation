@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NanoBanana Plan Elevation AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Plan to Elevation <span class="highlight">AI</span></h1>
+            <p>Transform your 2D floor plans into stunning elevations instantly.</p>
+        </header>
+
+        <main>
+            <div class="glass-panel upload-section" id="upload-area">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-content">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Upload your Floor Plan</h3>
+                    <p>Drag & drop or click to browse</p>
+                </div>
+                <div class="preview-container" id="preview-container" style="display: none;">
+                    <img id="image-preview" src="" alt="Preview">
+                    <button class="remove-btn" onclick="resetUpload()"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="generate-btn" disabled>
+                    <span class="btn-text">Generate Elevation</span>
+                    <span class="btn-loader" style="display: none;"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                </button>
+            </div>
+
+            <div class="result-section" id="result-section" style="display: none;">
+                <div class="glass-panel result-card">
+                    <h2>Generated Elevation</h2>
+                    <div class="image-wrapper">
+                        <img id="result-image" src="" alt="Generated Elevation">
+                        <div class="loading-overlay" id="loading-overlay">
+                            <div class="loader"></div>
+                            <p id="loading-text">Analyzing plan...</p>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <a id="download-btn" href="#" download class="secondary-btn"><i class="fas fa-download"></i> Download</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Developer Info Section -->
+            <div class="dev-info glass-panel">
+                 <h3><i class="fas fa-code"></i> For Developers</h3>
+                 <p>You can call this API directly from your application.</p>
+                 <div class="code-block">
+                     <pre>POST /api/generate</pre>
+                 </div>
+                 <p class="small">Send a multipart/form-data request with 'file' field.</p>
+            </div>
+
+        </main>
+
+        <footer>
+            <p>Powered by NanoBanana API</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
