@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import shutil
 import os
 import uuid
@@ -122,6 +122,29 @@ async def generate_elevation(file: UploadFile = File(...), request: Request = No
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Server Error: {str(e)}")
+
+@app.get("/api/download")
+async def download_image(url: str):
+    if not url:
+        raise HTTPException(status_code=400, detail="Missing URL")
+    
+    try:
+        # Stream the file from the external URL
+        response = requests.get(url, stream=True)
+        if response.status_code != 200:
+            raise HTTPException(status_code=400, detail="Could not fetch image")
+        
+        def iterfile():
+            yield from response.iter_content(chunk_size=4096)
+            
+        # Guess filename from URL or default
+        filename = url.split("/")[-1]
+        if "." not in filename:
+            filename = "elevation.jpg"
+            
+        return StreamingResponse(iterfile(), media_type=response.headers.get("content-type", "image/jpeg"), headers={"Content-Disposition": f"attachment; filename={filename}"})
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=str(e))
 
 # Mount static files
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")

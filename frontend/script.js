@@ -8,11 +8,20 @@ const btnText = document.querySelector('.btn-text');
 const btnLoader = document.querySelector('.btn-loader');
 const resultSection = document.getElementById('result-section');
 const resultImage = document.getElementById('result-image');
+const resultUrl = document.getElementById('result-url');
 const loadingOverlay = document.getElementById('loading-overlay');
 const loadingText = document.getElementById('loading-text');
 const downloadBtn = document.getElementById('download-btn');
 
 let selectedFile = null;
+
+function copyUrl() {
+    if (resultUrl.value) {
+        resultUrl.select();
+        document.execCommand('copy');
+        alert('URL copied to clipboard!');
+    }
+}
 
 // Drag & Drop
 uploadArea.addEventListener('dragover', (e) => {
@@ -103,7 +112,8 @@ generateBtn.addEventListener('click', async () => {
 
         if (data.status === 'success' && data.result_image_url) {
             resultImage.src = data.result_image_url;
-            downloadBtn.href = data.result_image_url;
+            resultUrl.value = data.result_image_url;
+            downloadBtn.href = `/api/download?url=${encodeURIComponent(data.result_image_url)}`;
 
             // Wait for image to load before removing overlay
             resultImage.onload = () => {
