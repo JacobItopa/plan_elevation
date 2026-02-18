@@ -113,7 +113,8 @@ generateBtn.addEventListener('click', async () => {
         if (data.status === 'success' && data.result_image_url) {
             resultImage.src = data.result_image_url;
             resultUrl.value = data.result_image_url;
-            downloadBtn.href = `/api/download?url=${encodeURIComponent(data.result_image_url)}`;
+            downloadBtn.href = data.result_image_url;
+            downloadBtn.target = "_blank"; // Open in new tab since it's external
 
             // Wait for image to load before removing overlay
             resultImage.onload = () => {
