@@ -124,26 +124,15 @@ async def generate_elevation(file: UploadFile = File(...), request: Request = No
         raise HTTPException(status_code=500, detail=f"Server Error: {str(e)}")
 
 @app.get("/api/download")
-async def download_image(task_id: str):
-    if not task_id:
-        raise HTTPException(status_code=400, detail="Missing task_id")
+async def download_image(url: str):
+    if not url:
+        raise HTTPException(status_code=400, detail="Missing URL")
     
     try:
-        # Fetch status to get the URL
-        # We run this in a thread because requests is blocking
-        status = await asyncio.to_thread(nano_api.get_task_status, task_id)
-        
-        # Robustly extract URL
-        data = status.get('data', status)
-        url = data.get('resultImageUrl')
-        
-        if not url:
-             raise HTTPException(status_code=404, detail="Image URL not found for this task (maybe expired or failed)")
-
         # Stream the file from the external URL
         response = requests.get(url, stream=True)
         if response.status_code != 200:
-            raise HTTPException(status_code=400, detail="Could not fetch image from source")
+            raise HTTPException(status_code=400, detail="Could not fetch image")
         
         def iterfile():
             yield from response.iter_content(chunk_size=4096)
@@ -151,7 +140,7 @@ async def download_image(task_id: str):
         # Guess filename from URL or default
         filename = url.split("/")[-1]
         if "." not in filename:
-            filename = f"elevation_{task_id}.jpg"
+            filename = "elevation.jpg"
             
         return StreamingResponse(iterfile(), media_type=response.headers.get("content-type", "image/jpeg"), headers={"Content-Disposition": f"attachment; filename={filename}"})
     except Exception as e:
